@@ -1,43 +1,45 @@
-import { model, Schema } from "mongoose";
+import { InferSchemaType, model, Schema } from "mongoose";
 import { v4 as uuidv4 } from "uuid";
 
-const complaintSchema = new Schema({
-  trackingId: {
-    type: String,
-    default: () => uuidv4(), // UUID tracking
-    unique: true,
-  },
-  userId: {
-    type: Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
-  },
-  assignedAgencyId: {
-    type: Schema.Types.ObjectId,
-    ref: "Agency",
-  },
-  category: { type: String, required: true },
-  description: { type: String, required: true },
-
-  status: {
-    type: String,
-    enum: ["submitted", "in_progress", "resolved", "closed"],
-    default: "submitted",
-  },
-
-  responses: [
-    {
-      responderId: {
-        type: Schema.Types.ObjectId,
-        ref: "User",
-      },
-      message: String,
-      date: { type: Date, default: Date.now },
+const complaintSchema = new Schema(
+  {
+    trackingId: {
+      type: String,
+      default: () => uuidv4(),
+      unique: true,
     },
-  ],
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    assignedAgencyId: {
+      type: Schema.Types.ObjectId,
+      ref: "Agency",
+    },
+    category: { type: String, required: true },
+    description: { type: String, required: true },
+    status: {
+      type: String,
+      enum: ["submitted", "in_progress", "resolved", "closed"],
+      default: "submitted",
+    },
+    responses: [
+      {
+        responderId: {
+          type: Schema.Types.ObjectId,
+          ref: "User",
+        },
+        message: String,
+        date: { type: Date, default: Date.now },
+      },
+    ],
+  },
+  {
+    timestamps: true,
+  }
+);
 
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now },
-});
-const complaint = model("Complaint", complaintSchema);
-export default complaint;
+const Complaint = model("Complaint", complaintSchema);
+export default Complaint;
+export type complaintType = InferSchemaType<typeof complaintSchema>;
