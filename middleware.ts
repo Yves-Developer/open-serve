@@ -1,17 +1,19 @@
 // middleware.ts
-import { auth } from "@/auth";
+import NextAuth from "next-auth";
+import authConfig from "./auth.config";
+const { auth } = NextAuth(authConfig);
 import { NextRequest, NextResponse } from "next/server";
 
 const publicRoutes = ["/", "/login"];
 
-export async function middleware(req: NextRequest) {
+export default auth((req) => {
   const { nextUrl } = req;
   const pathname = nextUrl.pathname;
 
   const isPublic = publicRoutes.includes(pathname);
 
   // Forward the request headers to auth()
-  const session = await auth();
+  const session = !!req.auth;
 
   if (isPublic) {
     return NextResponse.next();
@@ -24,10 +26,14 @@ export async function middleware(req: NextRequest) {
   if (!session) {
     return NextResponse.redirect(new URL("/login", nextUrl));
   }
+  if (session) {
+    //ToDo: redirect to  / when tries to hit login route
 
+    return NextResponse.redirect(new URL("/dashboard", nextUrl));
+  }
   // User is authenticated, proceed
   return NextResponse.next();
-}
+});
 
 export const config = {
   matcher: [
