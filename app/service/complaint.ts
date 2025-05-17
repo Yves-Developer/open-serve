@@ -56,11 +56,12 @@ export const getComplaint = async (id: string) => {
  * @param  filter filters for either userID or agencyId
  * @returns Object Complaint Data by userID or AgencyID or both
  */
+
 export const listComplaints = async (
   filter: { userId?: string; agencyId?: string } = {}
 ) => {
   await connectToDb();
-  const query: any = {};
+  const query: { userId?: string; agencyId?: string } = {};
   if (filter.userId && Types.ObjectId.isValid(filter.userId))
     query.userId = filter.userId;
   if (filter.agencyId && Types.ObjectId.isValid(filter.agencyId))
@@ -93,28 +94,28 @@ type UpdateComplaintPayload = {
  *   responseText: "We're looking into it now."
  * });
  */
-export const respondToComplaint = async (payload: UpdateComplaintPayload) => {
-  await connectToDb();
+// export const respondToComplaint = async (payload: UpdateComplaintPayload) => {
+//   await connectToDb();
 
-  const { trackingId, status, responseText } = payload;
+//   const { trackingId, status, responseText } = payload;
 
-  const update: any = {};
-  if (status) update.status = status;
-  if (responseText) {
-    update.$push = {
-      responses: {
-        text: responseText,
-        createdAt: new Date(),
-      },
-    };
-  }
+//   const update: any = {};
+//   if (status) update.status = status;
+//   if (responseText) {
+//     update.$push = {
+//       responses: {
+//         text: responseText,
+//         createdAt: new Date(),
+//       },
+//     };
+//   }
 
-  const updated = await Complaint.findByIdAndUpdate({ trackingId }, update, {
-    new: true,
-  });
+//   const updated = await Complaint.findByIdAndUpdate({ trackingId }, update, {
+//     new: true,
+//   });
 
-  return updated;
-};
+//   return updated;
+// };
 
 /* ---------- DELETE ---------- */
 /**

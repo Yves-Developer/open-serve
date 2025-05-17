@@ -1,8 +1,12 @@
 # OpenServe [Work In progress]
 
-**OpenServe** is a modern Citizen Engagement System that empowers citizens to submit complaints or feedback regarding public services. It routes submissions to the appropriate government agencies and provides a simple, transparent, and efficient way to track and respond to issues.
+**OpenServe** is a modern Citizen Engagement System that empowers citizens to submit complaints or feedback regarding public services. It submits complaint directly to the appropriate government agencies and provides a simple, transparent, and efficient way to track and respond to issues.
 
 ---
+
+## **#** Live Demo URL:
+
+### Link: [Work In Progress](https://)
 
 ## **#** Key Features (MVP)
 

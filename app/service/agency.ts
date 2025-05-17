@@ -4,7 +4,6 @@
 
 import { connectToDb } from "@/lib/mongooseDb";
 import Agency, { agencyPayloadType } from "@/models/Agency";
-import Complaint from "@/models/Complaint";
 import { Types } from "mongoose";
 
 /**
