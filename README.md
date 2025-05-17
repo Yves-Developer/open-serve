@@ -6,7 +6,7 @@
 
 ## **#** Live Demo URL:
 
-### Link: [Work In Progress](https://)
+### Link: [Work In Progress: https://open-serve.vercel.app/](https://open-serve.vercel.app)
 
 ## **#** Key Features (MVP)
 
