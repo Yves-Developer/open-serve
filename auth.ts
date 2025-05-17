@@ -2,10 +2,10 @@ import NextAuth from "next-auth";
 import authConfig from "@/auth.config";
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import db from "./lib/Authdb";
-import { getUserRole } from "./app/service/getRole";
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: MongoDBAdapter(db),
   session: { strategy: "jwt" },
+  trustHost: true,
   callbacks: {
     async jwt({ token }) {
       return token;

@@ -1,4 +1,3 @@
-"use client";
 import ComplaintCard from "@/components/complaintcard";
 // import { createAgency } from "./service/agency";
 // import { createComplaint, listComplaints } from "./service/complaint";
