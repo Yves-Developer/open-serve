@@ -1,4 +1,4 @@
-import { InferSchemaType, model, Schema } from "mongoose";
+import { InferSchemaType, model, models, Schema } from "mongoose";
 import { v4 as uuidv4 } from "uuid";
 
 const complaintSchema = new Schema(
@@ -13,7 +13,7 @@ const complaintSchema = new Schema(
       ref: "User",
       required: true,
     },
-    assignedAgencyId: {
+    agencyId: {
       type: Schema.Types.ObjectId,
       ref: "Agency",
     },
@@ -21,7 +21,7 @@ const complaintSchema = new Schema(
     description: { type: String, required: true },
     status: {
       type: String,
-      enum: ["submitted", "in_progress", "resolved", "closed"],
+      enum: ["submitted", "progress", "resolved", "closed"],
       default: "submitted",
     },
     responses: [
@@ -40,6 +40,10 @@ const complaintSchema = new Schema(
   }
 );
 
-const Complaint = model("Complaint", complaintSchema);
+const Complaint = models.Complaint || model("Complaint", complaintSchema);
 export default Complaint;
-export type complaintType = InferSchemaType<typeof complaintSchema>;
+type complaintSchemaType = InferSchemaType<typeof complaintSchema>;
+export type complaintPayloadType = Pick<
+  complaintSchemaType,
+  "userId" | "agencyId" | "category" | "description"
+>;

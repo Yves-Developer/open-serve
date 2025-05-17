@@ -1,4 +1,4 @@
-import { InferSchemaType, Schema, model } from "mongoose";
+import { InferSchemaType, Schema, model, models } from "mongoose";
 
 const agencySchema = new Schema(
   {
@@ -11,6 +11,12 @@ const agencySchema = new Schema(
     timestamps: true,
   }
 );
-const Agency = model("Agency", agencySchema);
+const Agency = models.Agency || model("Agency", agencySchema);
+
 export default Agency;
-export type agencyPayloadType = InferSchemaType<typeof agencySchema>;
+
+type agencySchemaType = InferSchemaType<typeof agencySchema>;
+export type agencyPayloadType = Pick<
+  agencySchemaType,
+  "name" | "email" | "location" | "category"
+>;
