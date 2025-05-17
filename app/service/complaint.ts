@@ -72,11 +72,11 @@ export const listComplaints = async (
 
 /* ---------- UPDATE: add a response OR change status ---------- */
 
-type UpdateComplaintPayload = {
-  trackingId: string; // or Types.ObjectId
-  status?: "progress" | "resolved" | "closed";
-  responseText?: string;
-};
+// type UpdateComplaintPayload = {
+//   trackingId: string; // or Types.ObjectId
+//   status?: "progress" | "resolved" | "closed";
+//   responseText?: string;
+// };
 
 /**
  * Update a complaint with a new status or append a response.
