@@ -36,11 +36,11 @@ export const createAgency = async (payload: agencyPayloadType) => {
  * @param {string} id - Agency ID to retrieve.
  * @returns {Promise<any|null>}
  */
-export async function getAgency(id: string) {
+export const getAgency = async (id: string) => {
   await connectToDb();
   if (!Types.ObjectId.isValid(id)) return null;
   return Agency.findById(id).lean();
-}
+};
 
 /* ---------- READ: list with optional filter ---------- */
 
@@ -50,10 +50,10 @@ export async function getAgency(id: string) {
  * @param {Partial<agencyPayloadType>} [filter={}] - Optional filter.
  * @returns {Promise<any[]>}
  */
-export async function listAgencies(filter: Partial<agencyPayloadType> = {}) {
+export const listAgencies = async (filter: Partial<agencyPayloadType> = {}) => {
   await connectToDb();
   return Agency.find(filter).lean();
-}
+};
 
 /* ---------- UPDATE ---------- */
 
@@ -64,14 +64,14 @@ export async function listAgencies(filter: Partial<agencyPayloadType> = {}) {
  * @param {Partial<agencyPayloadType>} updates - Fields to update.
  * @returns {Promise<any|null>}
  */
-export async function updateAgency(
+export const updateAgency = async (
   id: string,
   updates: Partial<agencyPayloadType>
-) {
+) => {
   await connectToDb();
   if (!Types.ObjectId.isValid(id)) return null;
   return Agency.findByIdAndUpdate(id, updates, { new: true, lean: true });
-}
+};
 
 /* ---------- DELETE ---------- */
 
@@ -81,57 +81,9 @@ export async function updateAgency(
  * @param {string} id - Agency ID to delete.
  * @returns {Promise<boolean>}
  */
-export async function deleteAgency(id: string) {
+export const deleteAgency = async (id: string) => {
   await connectToDb();
   if (!Types.ObjectId.isValid(id)) return false;
   await Agency.findByIdAndDelete(id);
   return true;
-}
-
-// Type for the update payload
-type UpdateComplaintPayload = {
-  complaintId: string; // or Types.ObjectId
-  status?: "progress" | "resolved" | "closed";
-  responseText?: string;
 };
-
-/**
- * Update a complaint with a new status or append a response.
- *
- * @param {UpdateComplaintPayload} payload - The update details.
- * @param {string} payload.complaintId - The ID of the complaint.
- * @param {"progress"|"resolved"|"closed"} [payload.status] - New status (optional).
- * @param {string} [payload.responseText] - Response message to add (optional).
- * @returns {Promise<any>} The updated complaint document.
- *
- * @example
- * await updateComplaintResponse({
- *   complaintId: "6651c4fc9d5b41b9d9fd0e42",
- *   status: "progress",
- *   responseText: "We're looking into it now."
- * });
- */
-export async function updateComplaintResponse(payload: UpdateComplaintPayload) {
-  await connectToDb();
-
-  const { complaintId, status, responseText } = payload;
-
-  const objectId = new Types.ObjectId(complaintId);
-
-  const update: any = {};
-  if (status) update.status = status;
-  if (responseText) {
-    update.$push = {
-      responses: {
-        text: responseText,
-        createdAt: new Date(),
-      },
-    };
-  }
-
-  const updated = await Complaint.findByIdAndUpdate(objectId, update, {
-    new: true,
-  });
-
-  return updated;
-}

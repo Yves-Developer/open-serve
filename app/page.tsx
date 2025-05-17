@@ -32,6 +32,7 @@ const Home = async () => {
   }
   console.log(data);
   const session = await auth();
+  console.log("session:", session);
   return (
     <div>
       {session ? <SignOut /> : <SignIn />}

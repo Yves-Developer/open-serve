@@ -2,33 +2,23 @@ import NextAuth from "next-auth";
 import authConfig from "@/auth.config";
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import db from "./lib/Authdb";
-
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: MongoDBAdapter(db),
   session: { strategy: "jwt" },
-  events: {
-    async signIn({ user, account, profile, isNewUser }) {
-      if (isNewUser) {
-        try {
-          await db
-            .db()
-            .collection("users")
-            .updateOne(
-              { _id: new Object(user.id) },
-              {
-                $set: {
-                  firstLoginAt: new Date(),
-                  role: "user",
-                  githubUsername: profile?.login,
-                  emailVerified: new Date(),
-                },
-              }
-            );
-        } catch (err) {
-          console.error("Error updating user on first login:", err);
-        }
+  callbacks: {
+    async jwt({ token }) {
+      return token;
+    },
+
+    async session({ session, token }) {
+      // Expose id & role to the client session object
+      if (session.user) {
+        session.user.id = token.sub as string;
       }
+
+      return session;
     },
   },
+
   ...authConfig,
 });
