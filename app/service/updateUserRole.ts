@@ -12,17 +12,13 @@ import { ObjectId } from "mongodb";
  * @returns { success: true } on success
  */
 export async function updateUserRole(newRole: "user" | "agency") {
-  // 1. Verify session
   const session = await auth();
-  console.log(session);
   if (!session?.user?.id) throw new Error("Unauthorized");
 
-  // 2. Validate input
   if (newRole !== "user" && newRole !== "agency") {
     throw new Error("Invalid role");
   }
 
-  // 3. Persist to MongoDB
   await db
     .db()
     .collection("users")

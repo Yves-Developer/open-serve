@@ -2,6 +2,7 @@ import NextAuth from "next-auth";
 import authConfig from "@/auth.config";
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import db from "./lib/Authdb";
+import { getUserRole } from "./app/service/getRole";
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: MongoDBAdapter(db),
   session: { strategy: "jwt" },
@@ -17,6 +18,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       }
 
       return session;
+    },
+    async redirect({ url, baseUrl }) {
+      if (url.startsWith(baseUrl)) {
+        return `${baseUrl}/onboarding`;
+      }
+
+      return baseUrl;
     },
   },
 

@@ -1,45 +1,78 @@
-import SignIn from "@/components/auth/sign-button";
-import { createAgency } from "./service/agency";
-import { auth } from "@/auth";
-import SignOut from "@/components/auth/signout-button";
-import { createComplaint, listComplaints } from "./service/complaint";
-import { Types } from "mongoose";
-const Home = async () => {
-  const data = await createAgency({
-    name: "Yves",
-    email: "yvesmugisha09@gmail.com",
-    location: "Kigali",
-    category: ["Water"],
-  });
-  const time = 0;
-  // 24 hex chars (0‑9, a‑f)
-  const userId = new Types.ObjectId("6651c4fc9d5b41b9d9fd0e42");
-  const agencyId = new Types.ObjectId("6651c5149d5b41b9d9fd0e43");
+"use client";
+import ComplaintCard from "@/components/complaintcard";
+// import { createAgency } from "./service/agency";
+// import { createComplaint, listComplaints } from "./service/complaint";
+// import { useState, useEffect } from "react";
+// import { listComplaints } from "./service/complaint";
 
-  if (time > 0) {
-    const comData = await createComplaint({
-      userId,
-      agencyId,
-      category: "Water",
-      description: "text is 101",
-    });
-    console.log(comData);
-  } else {
-    const complaint = await listComplaints({
-      userId: "6651c4fc9d5b41b9d9fd0e42",
-    });
-    console.log("Complaints!!:", complaint);
-  }
-  console.log(data);
-  const session = await auth();
-  console.log("session:", session);
+// type Complaint = {
+//   _id: string;
+//   agencyId: string;
+//   category: string;
+//   createdAt: Date | string;
+//   description: string;
+//   responses: any[];
+//   status: string;
+//   trackingId: string;
+//   updatedAt: Date | string;
+//   userId: string;
+//   __v: number;
+// };
+
+const Home = () => {
+  // const [issue, setIssue] = useState<Complaint[]>([]);
+  // const [loading, setLoading] = useState(true);
+
+  // useEffect(() => {
+  //   async function fetchData() {
+  //     // Create agency if needed
+  //     // const data = await createAgency({
+  //     //   name: "Yves",
+  //     //   email: "yvesmugisha09@gmail.com",
+  //     //   location: "Kigali",
+  //     //   category: ["Water"],
+  //     // });
+
+  //     // Example condition — replace with actual logic
+  //     const time = 0;
+
+  //     // if (time > 0) {
+  //     //   // create complaint example
+  //     //   // await createComplaint({
+  //     //   //   userId: "6651c4fc9d5b41b9d9fd0e42",
+  //     //   //   agencyId: "6651c5149d5b41b9d9fd0e43",
+  //     //   //   category: "Water",
+  //     //   //   description: "text is 101",
+  //     //   // });
+  //     // } else {
+  //     // fetch complaints
+  //     const complaints = await listComplaints({
+  //       userId: "6651c4fc9d5b41b9d9fd0e42",
+  //     });
+
+  //     // You may need to normalize the dates here:
+  //     const normalized: Complaint[] = complaints.map((c: any) => ({
+  //       ...c,
+  //       createdAt: new Date(c.createdAt),
+  //       updatedAt: new Date(c.updatedAt),
+  //     }));
+
+  //     setIssue(normalized);
+  //     // }
+  //     setLoading(false);
+  //   }
+
+  //   fetchData();
+  // }, []);
+
+  // if (loading) return <div>Loading...</div>;
+
   return (
-    <div>
-      {session ? <SignOut /> : <SignIn />}
-      <div>
-        <br />
-        <br />
-        {data ? "Data" : ""} !
+    <div className="w-full max-w-7xl mx-auto px-10 py-5">
+      <div className="w-full grid gap-4 grid-cols-1 md:grid-cols-3 lg:grid-cols-6">
+        {[1, 2, 3, 4, 5].map((index) => (
+          <ComplaintCard key={index} />
+        ))}
       </div>
     </div>
   );

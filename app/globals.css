@@ -78,3 +78,6 @@
   --sidebar-ring: oklch(0.81 0.14 216.36);
 }
 
+body{
+  @apply bg-background text-foreground;
+}

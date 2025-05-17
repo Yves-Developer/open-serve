@@ -1,35 +1,18 @@
-"use client";
+import { auth } from "@/auth";
+import OnboardClient from "@/components/onboard/client";
 
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { updateUserRole } from "../service/updateUserRole";
+import { redirect } from "next/navigation";
+import { getUserRole } from "../service/getRole";
 
-export default function Onboarding() {
-  const [loading, setLoading] = useState(false);
-  const router = useRouter();
+export default async function OnboardingPage() {
+  const session = await auth();
+  if (!session?.user?.id) throw new Error("Not authenticated");
 
-  const saveRole = async (role: "user" | "agency") => {
-    setLoading(true);
-    try {
-      await updateUserRole(role);
-      // await signIn("google", { redirect: false }); // refresh session
-      router.push("/"); // navigate to dashboard or home
-    } catch (err) {
-      alert((err as Error).message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { success, role } = await getUserRole(session.user.id);
 
-  return (
-    <div className="flex flex-col items-center gap-4 p-6">
-      <h1 className="text-xl font-semibold">Pick your role</h1>
-      <button disabled={loading} onClick={() => saveRole("user")}>
-        I’m a User
-      </button>
-      <button disabled={loading} onClick={() => saveRole("agency")}>
-        I’m an Agency
-      </button>
-    </div>
-  );
+  if (success && role) {
+    return redirect("/");
+  }
+
+  return <OnboardClient />;
 }
