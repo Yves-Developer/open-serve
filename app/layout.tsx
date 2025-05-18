@@ -21,8 +21,10 @@ export default function RootLayout({
       className="dark selection:bg-primary/10 selection:text-primary"
     >
       <body>
-        <Navbar />
-        <SessionProvider>{children}</SessionProvider>
+        <SessionProvider>
+          <Navbar />
+          {children}
+        </SessionProvider>
         <Toaster />
       </body>
     </html>

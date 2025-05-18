@@ -1,20 +1,25 @@
 "use server";
-import Complaint, { complaintPayloadType } from "@/models/Complaint";
+import Complaint from "@/models/Complaint";
 
 import { v4 as uuidv4 } from "uuid";
 import { connectToDb } from "@/lib/mongooseDb";
 import { Types } from "mongoose";
 
 /* ---------- CREATE  ---------- */
-
+interface CreateComplaintInput {
+  category: string;
+  description: string;
+  agencyId: string;
+  userId: string;
+}
 /**
  * Creates a new complaint and assign tracking ID
  *
- * @param {complaintPayloadType} payload - The complaint data including description, userId,agencyId,trackingId and category.
+ * @param {CreateComplaintInput} payload - The complaint data including description, userId,agencyId and category.
  * @returns trackingId of created Complaints.
  */
 
-export const createComplaint = async (payload: complaintPayloadType) => {
+export const createComplaint = async (payload: CreateComplaintInput) => {
   await connectToDb();
   const { userId, agencyId, category, description } = payload;
 
@@ -22,8 +27,8 @@ export const createComplaint = async (payload: complaintPayloadType) => {
 
   const complaint = new Complaint({
     trackingId,
-    userId,
-    agencyId,
+    userId: new Types.ObjectId(userId),
+    agencyId: new Types.ObjectId(agencyId),
     category,
     description,
   });

@@ -51,7 +51,7 @@ export const getAgency = async (id: string) => {
  */
 export const listAgencies = async (filter: Partial<agencyPayloadType> = {}) => {
   await connectToDb();
-  return Agency.find(filter).lean();
+  return Agency.find(filter);
 };
 
 /* ---------- UPDATE ---------- */

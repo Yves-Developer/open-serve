@@ -1,66 +1,70 @@
-import { auth } from "@/auth";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Button } from "../ui/button";
 import Link from "next/link";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
 import {
   DropdownMenu,
+  DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
-import SignOut from "../auth/signout-button";
-const Navbar = async () => {
+} from "@/components/ui/dropdown-menu";
+import SignOut from "@/components/auth/signout-button";
+
+import { auth } from "@/auth";
+import IssueFormWrapper from "../form/issueFormWrapper";
+
+export default async function Navbar() {
   const session = await auth();
+
   if (!session) return null;
-  const name = session?.user?.name ? session.user.name.split(" ") : "";
-  const letter = name[0][0] + name[1][0] || "U";
+
+  const nameParts = session.user?.name?.split(" ") ?? [];
+  const initials =
+    nameParts.length >= 2
+      ? nameParts[0][0] + nameParts[1][0]
+      : nameParts[0]?.[0] ?? "U";
+
   return (
-    <div className="w-full py-5 border-b border-input">
-      <div className="px-10 w-full max-w-7xl mx-auto">
-        <div className="w-full flex justify-between items-center">
-          <div>
-            <h3 className="text-xl lg:text-3xl font-bold">
-              Open<span className="text-primary">Serve</span>
-            </h3>
-          </div>
-          <div className="flex gap-4 items-center">
-            <Link
-              href={"/track"}
-              className="text-md font-semibold hover:text-primary"
-            >
-              Track Issue
-            </Link>
-            <div>
-              <Button>Report Issue</Button>
-            </div>
+    <header className="w-full border-b border-input py-5">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-10">
+        <h3 className="text-xl font-bold lg:text-3xl">
+          Open<span className="text-primary">Serve</span>
+        </h3>
+        {/* ─────────────────────── Track Issues ─────────────────────── */}
+        <nav className="flex items-center gap-4">
+          <Link
+            href="/track"
+            className="text-md font-semibold hover:text-primary"
+          >
+            Track Issue
+          </Link>
 
-            <DropdownMenu>
-              <DropdownMenuTrigger>
-                {" "}
-                {session && (
-                  <Avatar>
-                    <AvatarImage src={session?.user?.image} />
-                    <AvatarFallback>{letter}</AvatarFallback>
-                  </Avatar>
-                )}
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="mt-2 mr-5">
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>{session?.user?.name}</DropdownMenuItem>
-                <DropdownMenuItem>{session?.user?.email}</DropdownMenuItem>
-                <DropdownMenuItem>
-                  <SignOut />
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-        </div>
+          {/* ─── New Complaint dialog ─────────────────────── */}
+          <IssueFormWrapper />
+
+          {/* ─── Avatar dropdown ──────────────────────────── */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Avatar className="cursor-pointer">
+                {session.user.image && <AvatarImage src={session.user.image} />}
+                <AvatarFallback>{initials}</AvatarFallback>
+              </Avatar>
+            </DropdownMenuTrigger>
+
+            <DropdownMenuContent className="mr-5 mt-2">
+              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>{session.user.name}</DropdownMenuItem>
+              <DropdownMenuItem>{session.user.email}</DropdownMenuItem>
+              <DropdownMenuItem>
+                <SignOut />
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </nav>
       </div>
-    </div>
+    </header>
   );
-};
-
-export default Navbar;
+}
