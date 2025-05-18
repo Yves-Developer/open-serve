@@ -4,8 +4,6 @@ const agencySchema = new Schema(
   {
     name: { type: String, required: true, unique: true },
     email: { type: String },
-    category: [String],
-    location: { type: String },
   },
   {
     timestamps: true,
@@ -16,7 +14,4 @@ const Agency = models.Agency || model("Agency", agencySchema);
 export default Agency;
 
 type agencySchemaType = InferSchemaType<typeof agencySchema>;
-export type agencyPayloadType = Pick<
-  agencySchemaType,
-  "name" | "email" | "location" | "category"
->;
+export type agencyPayloadType = Pick<agencySchemaType, "name" | "email">;

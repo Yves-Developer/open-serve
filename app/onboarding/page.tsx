@@ -1,6 +1,5 @@
 import { auth } from "@/auth";
 import OnboardClient from "@/components/onboard/client";
-
 import { redirect } from "next/navigation";
 import { getUserRole } from "../service/getRole";
 

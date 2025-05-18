@@ -1,38 +1,32 @@
 import Link from "next/link";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu";
-import SignOut from "@/components/auth/signout-button";
-
 import { auth } from "@/auth";
 import IssueFormWrapper from "../form/issueFormWrapper";
+import { getUserRole } from "@/app/service/getRole";
+
+import NavbarDropdown from "../auth/NavbarDropDown";
 
 export default async function Navbar() {
   const session = await auth();
 
   if (!session) return null;
+  const Role = await getUserRole(session.user.id);
 
-  const nameParts = session.user?.name?.split(" ") ?? [];
-  const initials =
-    nameParts.length >= 2
-      ? nameParts[0][0] + nameParts[1][0]
-      : nameParts[0]?.[0] ?? "U";
-
+  // const nameParts = session.user?.name?.split(" ") ?? [];
+  // const initials =
+  //   nameParts.length >= 2
+  //     ? nameParts[0][0] + nameParts[1][0]
+  //     : nameParts[0]?.[0] ?? "U";
+  // const handleSignOut = async () => {
+  //   await signOut();
+  // };
   return (
     <header className="w-full border-b border-input py-5">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-10">
         <h3 className="text-xl font-bold lg:text-3xl">
           Open<span className="text-primary">Serve</span>
         </h3>
-        {/* ─────────────────────── Track Issues ─────────────────────── */}
+        {/* ______________________ Track Issues ______________________ */}
         <nav className="flex items-center gap-4">
           <Link
             href="/track"
@@ -41,28 +35,17 @@ export default async function Navbar() {
             Track Issue
           </Link>
 
-          {/* ─── New Complaint dialog ─────────────────────── */}
-          <IssueFormWrapper />
+          {/* _____________ New Complaint dialog ___________________ */}
 
-          {/* ─── Avatar dropdown ──────────────────────────── */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Avatar className="cursor-pointer">
-                {session.user.image && <AvatarImage src={session.user.image} />}
-                <AvatarFallback>{initials}</AvatarFallback>
-              </Avatar>
-            </DropdownMenuTrigger>
+          {Role && Role.role === "user" ? <IssueFormWrapper /> : ""}
 
-            <DropdownMenuContent className="mr-5 mt-2">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>{session.user.name}</DropdownMenuItem>
-              <DropdownMenuItem>{session.user.email}</DropdownMenuItem>
-              <DropdownMenuItem>
-                <SignOut />
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          {/* _____________ Avatar dropdown ______________________ */}
+          <NavbarDropdown
+            name={session.user.name ?? "Unknown"}
+            email={session.user.email!}
+            image={session.user.image ?? undefined}
+            role={Role.role}
+          />
         </nav>
       </div>
     </header>

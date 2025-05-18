@@ -45,13 +45,10 @@ export const createComplaint = async (payload: CreateComplaintInput) => {
  * @param {string} id complaint Document Id
  * @returns Object contains agency data {agencyId,name,email} and user Data[Citezen]{userId,name,email}
  */
-export const getComplaint = async (id: string) => {
+export const getComplaint = async (userId: string) => {
   await connectToDb();
-  if (!Types.ObjectId.isValid(id)) return null;
-  return Complaint.findById(id)
-    .populate("agencyId", "name email")
-    .populate("userId", "name email")
-    .lean();
+
+  return Complaint.findOne({ userId: new Types.ObjectId(userId) }).lean();
 };
 
 /* ---------- READ: list by user OR agency ---------- */

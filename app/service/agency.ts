@@ -7,22 +7,25 @@ import Agency, { agencyPayloadType } from "@/models/Agency";
 import { Types } from "mongoose";
 
 /**
- * Creates a new agency if the email is not already taken.
+ * Creates a new agency .
  *
- * @param payload - The agency data including name, email, location, and category.
+ * @param payload - The agency data including name, email.
  * @returns A response with a message and optionally the created agency.
  */
 export const createAgency = async (payload: agencyPayloadType) => {
   await connectToDb();
 
-  const { email, name, location, category } = payload;
+  const { email, name } = payload;
 
   const emailTaken = await Agency.findOne({ email }).lean();
   if (emailTaken) {
     return { message: "Email already exists", type: "error" };
   }
-
-  const agency = await Agency.create({ email, name, location, category });
+  const nameTaken = await Agency.find({ name }).lean();
+  if (nameTaken.length > 0) {
+    return { message: "Agency name already exists", type: "error" };
+  }
+  const agency = await Agency.create({ email, name });
 
   return { message: "Created", type: "success", data: agency.toJSON() };
 };
@@ -30,15 +33,16 @@ export const createAgency = async (payload: agencyPayloadType) => {
 /* ---------- READ: get one ---------- */
 
 /**
- * Fetch an agency by its ID.
+ * Fetch an agency by its Email.
  *
- * @param {string} id - Agency ID to retrieve.
+ * @param {string} email- Agency Email to retrieve.
  * @returns {Promise<any|null>}
  */
-export const getAgency = async (id: string) => {
+export const getAgency = async (email: string) => {
   await connectToDb();
-  if (!Types.ObjectId.isValid(id)) return null;
-  return Agency.findById(id).lean();
+  if (!email) return null;
+  const agency = await Agency.findOne({ email }).lean();
+  return agency;
 };
 
 /* ---------- READ: list with optional filter ---------- */

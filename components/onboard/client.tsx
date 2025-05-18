@@ -17,7 +17,7 @@ export default function OnboardClient() {
     try {
       setLoading(true);
       await updateUserRole(role);
-      router.push("/");
+      router.push("/dashboard");
     } catch (error) {
       console.error("Failed to update role:", error);
     } finally {
@@ -26,9 +26,6 @@ export default function OnboardClient() {
   };
 
   if (!session) return null;
-  if (session.user.role) {
-    router.push("/");
-  }
 
   return (
     <div className="w-full h-screen flex justify-center items-center">

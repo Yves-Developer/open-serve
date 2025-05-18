@@ -25,6 +25,8 @@ type Props = {
   description: string;
   status: "submitted" | "progress" | "resolved" | "rejected";
   agencyName: string;
+  userName?: string;
+  role: string;
 };
 
 export default function ComplaintCard({
@@ -33,6 +35,8 @@ export default function ComplaintCard({
   description,
   status,
   agencyName,
+  userName,
+  role,
 }: Props) {
   const copyId = async () => {
     await navigator.clipboard.writeText(trackingId);
@@ -86,12 +90,12 @@ export default function ComplaintCard({
                 <Hash className="h-4 w-4 text-primary" />
 
                 <span className="font-mono font-semibold text-sm truncate max-w-[100px]">
-                  {agencyName || "Agency"}
+                  {role == "agency" ? userName : agencyName}
                 </span>
               </div>
             </TooltipTrigger>
             <TooltipContent side="bottom">
-              {agencyName || "Full Agency"}
+              {userName || "Full Name"}
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
