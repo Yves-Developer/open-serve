@@ -53,6 +53,7 @@ export const getComplaint = async (id: string) => {
 
 /**
  *
+ * @description List all complaints by userId or agencyId
  * @param  filter filters for either userID or agencyId
  * @returns Object Complaint Data by userID or AgencyID or both
  */

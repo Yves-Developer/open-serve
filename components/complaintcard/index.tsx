@@ -23,7 +23,8 @@ type Props = {
   trackingId: string;
   category: string;
   description: string;
-  status: "submitted" | "progress" | "closed";
+  status: "submitted" | "progress" | "resolved" | "rejected";
+  agencyName: string;
 };
 
 export default function ComplaintCard({
@@ -31,6 +32,7 @@ export default function ComplaintCard({
   category,
   description,
   status,
+  agencyName,
 }: Props) {
   const copyId = async () => {
     await navigator.clipboard.writeText(trackingId);
@@ -84,11 +86,13 @@ export default function ComplaintCard({
                 <Hash className="h-4 w-4 text-primary" />
 
                 <span className="font-mono font-semibold text-sm truncate max-w-[100px]">
-                  Agency
+                  {agencyName || "Agency"}
                 </span>
               </div>
             </TooltipTrigger>
-            <TooltipContent side="bottom">Full Agency</TooltipContent>
+            <TooltipContent side="bottom">
+              {agencyName || "Full Agency"}
+            </TooltipContent>
           </Tooltip>
         </TooltipProvider>
         <Button size="icon" variant="ghost">
