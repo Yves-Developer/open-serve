@@ -11,7 +11,7 @@ export default async function OnboardingPage() {
   const { success, role } = await getUserRole(session.user.id);
 
   if (success && role) {
-    return redirect("/");
+    return redirect("/dashboard");
   }
 
   return <OnboardClient />;
