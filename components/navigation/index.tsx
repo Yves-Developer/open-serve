@@ -13,8 +13,9 @@ import {
 import SignOut from "../auth/signout-button";
 const Navbar = async () => {
   const session = await auth();
+  if (!session) return null;
   const name = session?.user?.name ? session.user.name.split(" ") : "";
-  const letter = name[0][0] + name[1][0].toUpperCase();
+  const letter = name[0][0] + name[1][0] || "U";
   return (
     <div className="w-full py-5 border-b border-input">
       <div className="px-10 w-full max-w-7xl mx-auto">

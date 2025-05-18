@@ -6,7 +6,7 @@ import { getUserRole } from "../service/getRole";
 
 export default async function OnboardingPage() {
   const session = await auth();
-  if (!session?.user?.id) throw new Error("Not authenticated");
+  if (!session?.user?.id) return redirect("/login");
 
   const { success, role } = await getUserRole(session.user.id);
 
