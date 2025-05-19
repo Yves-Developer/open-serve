@@ -45,6 +45,18 @@ export const getAgency = async (email: string) => {
   return agency;
 };
 
+/**
+ * Fetch an agency by its Id.
+ *
+ * @param {string} email- Agency Email to retrieve.
+ * @returns {Promise<any|null>}
+ */
+export const getAgencyById = async (id: string) => {
+  await connectToDb();
+  if (!id) return null;
+  const agency = await Agency.findById(id).lean();
+  return agency ? JSON.parse(JSON.stringify(agency)) : null;
+};
 /* ---------- READ: list with optional filter ---------- */
 
 /**

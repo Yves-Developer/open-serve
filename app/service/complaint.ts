@@ -50,6 +50,27 @@ export const getComplaint = async (userId: string) => {
 
   return Complaint.findOne({ userId: new Types.ObjectId(userId) }).lean();
 };
+/* ---------- READ: get one with TrackingId ---------- */
+/**
+ * Get complaint By TarckingID and populate agency data
+ * @param {string} trackingId
+ * @returns Object Complaint Data, Agency Data
+ */
+export const getComplaintByTrackingId = async (trackingId: string) => {
+  await connectToDb();
+
+  const complaint = await Complaint.findOne(
+    { trackingId },
+    { __v: 0, createdAt: 0, updatedAt: 0 }
+  ).populate({
+    path: "agencyId",
+    select: "name",
+  });
+
+  if (!complaint) return null;
+
+  return JSON.parse(JSON.stringify(complaint));
+};
 
 /* ---------- READ: list by user OR agency ---------- */
 
@@ -75,11 +96,11 @@ export const listComplaints = async (
 
 /* ---------- UPDATE: add a response OR change status ---------- */
 
-// type UpdateComplaintPayload = {
-//   trackingId: string; // or Types.ObjectId
-//   status?: "progress" | "resolved" | "closed";
-//   responseText?: string;
-// };
+type UpdateComplaintPayload = {
+  trackingId: string; // or Types.ObjectId
+  status?: "progress" | "resolved" | "closed";
+  responseText?: string;
+};
 
 /**
  * Update a complaint with a new status or append a response.
@@ -97,28 +118,37 @@ export const listComplaints = async (
  *   responseText: "We're looking into it now."
  * });
  */
-// export const respondToComplaint = async (payload: UpdateComplaintPayload) => {
-//   await connectToDb();
+type UpdateComplaintDoc = {
+  status?: "submitted" | "progress" | "resolved" | "closed";
+  $push?: {
+    responses: {
+      message: string;
+      date: Date;
+    };
+  };
+};
+export const respondToComplaint = async (payload: UpdateComplaintPayload) => {
+  await connectToDb();
 
-//   const { trackingId, status, responseText } = payload;
+  const { trackingId, status, responseText } = payload;
 
-//   const update: any = {};
-//   if (status) update.status = status;
-//   if (responseText) {
-//     update.$push = {
-//       responses: {
-//         text: responseText,
-//         createdAt: new Date(),
-//       },
-//     };
-//   }
+  const update: UpdateComplaintDoc = {};
+  if (status) update.status = status;
+  if (responseText) {
+    update.$push = {
+      responses: {
+        message: responseText,
+        date: new Date(),
+      },
+    };
+  }
 
-//   const updated = await Complaint.findByIdAndUpdate({ trackingId }, update, {
-//     new: true,
-//   });
+  const updated = await Complaint.findOneAndUpdate({ trackingId }, update, {
+    new: true,
+  }).lean();
 
-//   return updated;
-// };
+  return updated ? JSON.parse(JSON.stringify(updated)) : null;
+};
 
 /* ---------- DELETE ---------- */
 /**

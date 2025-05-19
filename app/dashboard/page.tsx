@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 
 import { listComplaints } from "../service/complaint";
 import { auth } from "@/auth";
-import { getAgency } from "../service/agency";
+import { getAgency, getAgencyById } from "../service/agency";
 import { getUserRole } from "../service/getRole";
 import { getUserName } from "../service/getUserName";
 type Complaint = {
@@ -11,7 +11,7 @@ type Complaint = {
   trackingId: string;
   category: string;
   description: string;
-  status: "submitted" | "progress" | "resolved" | "rejected";
+  status: "submitted" | "progress" | "resolved" | "closed";
   agencyId: string;
   userId?: string;
 };
@@ -24,7 +24,7 @@ const Dashboard = async () => {
   const email = session.user.email;
   const role = await getUserRole(userId);
 
-  /* ---------- base query: complaints created by this user ---------- */
+  /* ----------  complaints created by  user ---------- */
   let raws = await listComplaints({ userId });
 
   let complaints: Complaint[] = raws.map((c) => ({
@@ -34,7 +34,7 @@ const Dashboard = async () => {
     description: c.description,
     status: c.status,
     agencyId: c.agencyId,
-    userId: String(c.userId), // ⬅️ keep userId
+    userId: String(c.userId),
   }));
 
   /* ---------- agency view ---------- */
@@ -54,7 +54,7 @@ const Dashboard = async () => {
       description: c.description,
       status: c.status,
       agencyId: c.agencyId,
-      userId: String(c.userId), // ⬅️ keep userId
+      userId: String(c.userId),
     }));
   }
 
@@ -66,7 +66,7 @@ const Dashboard = async () => {
   /* ---------- enrich with agency & user names ---------- */
   const enriched = await Promise.all(
     complaints.map(async (c) => {
-      const agencyDoc = await getAgency(c.agencyId);
+      const agencyDoc = await getAgencyById(c.agencyId);
       const agencyName = Array.isArray(agencyDoc)
         ? agencyDoc[0]?.name
         : agencyDoc?.name;

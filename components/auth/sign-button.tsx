@@ -3,7 +3,7 @@ import { Button } from "../ui/button";
 
 export default function SignIn() {
   return (
-    <div className="w-full h-screen max-w-7xl mx-auto flex gap-4 py-52">
+    <div className="w-full flex flex-row px-52 gap-4">
       <form
         action={async () => {
           "use server";

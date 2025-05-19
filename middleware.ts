@@ -10,7 +10,11 @@ export default auth(async (req: NextAuthRequest) => {
   const { nextUrl, auth: session } = req;
   const pathname = nextUrl.pathname;
 
-  if (publicRoutes.includes(pathname) || pathname.startsWith("/api/auth")) {
+  if (
+    publicRoutes.includes(pathname) ||
+    pathname.startsWith("/api/auth") ||
+    pathname.startsWith("/track")
+  ) {
     return NextResponse.next();
   }
   if (pathname === "/api/role") {

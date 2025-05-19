@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "@/assets/css/block.css";
 import { SessionProvider } from "next-auth/react";
 import Navbar from "@/components/navigation";
 import { Toaster } from "sonner";
