@@ -3,6 +3,7 @@ import { auth } from "@/auth";
 import IssueFormWrapper from "../form/issueFormWrapper";
 import { getUserRole } from "@/app/service/getRole";
 import NavbarDropdown from "../auth/NavbarDropDown";
+import { Button } from "../ui/button";
 
 export default async function Navbar() {
   const session = await auth();
@@ -41,9 +42,11 @@ export default async function Navbar() {
               role={roleDoc?.role}
             />
           ) : (
-            <Link href="/login" className="font-semibold hover:text-primary">
-              Log in
-            </Link>
+            <Button variant="outline">
+              <Link href="/login" className="font-semibold hover:text-primary">
+                Log in
+              </Link>
+            </Button>
           )}
         </nav>
       </div>
