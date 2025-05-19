@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { respondToComplaint } from "@/app/service/complaint";
+import { useRouter } from "next/navigation";
 
 export default function AddResponseForm({
   trackingId,
@@ -14,7 +15,7 @@ export default function AddResponseForm({
 }) {
   const [text, setText] = useState("");
   const [isPending, startTransition] = useTransition();
-
+  const router = useRouter();
   const submit = () => {
     if (!text.trim()) return;
     startTransition(async () => {
@@ -22,6 +23,9 @@ export default function AddResponseForm({
       if (ok) {
         toast.success("Response added");
         setText("");
+        setTimeout(() => {
+          router.refresh();
+        }, 1000);
       } else toast.error("Failed to add response");
     });
   };
