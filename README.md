@@ -1,82 +1,101 @@
-# OpenServe 
+# OpenServe – Citizen Engagement System
 
-> A modern **Citizen‑Engagement Platform** that bridges the gap between the public and government agencies.  
-> Citizens can report issues in seconds, agencies can respond transparently, and everyone can track progress in real‑time.
+![OpenServe](./public/mockup-preview.png)
 
-![OpenServe hero](./public/mockup-preview.png)
+## 🖥️ Live Demo
 
----
+| Environment | URL                               |
+| ----------- | --------------------------------- |
+| Production  | **https://open-serve.vercel.app** |
+| WEB APPLOGO | ![Logo](./app/favicon.ico)        |
 
-## Live Demo
-
-| Environment    | URL                             |
-| -------------- | ------------------------------- |
-| **Production** | <https://open-serve.vercel.app> |
-| **LOGO**       | ![Logo](./app/favicon.ico)      |
+> _Credentials_: sign in with a Google OR Github account (OAuth).
 
 ---
 
-## Features (MVP)
+## 📡 Problem & Goal
 
-| Module                   | Capabilities                                                                                               |
-| ------------------------ | ---------------------------------------------------------------------------------------------------------- |
-| **Complaint Submission** | Guided form with category & agency autocomplete, markdown‑style descriptions, image uploads (coming soon). |
-| **Smart Routing**        | Each complaint is auto‑tagged and sent to the correct agency inbox.                                        |
-| **Citizen Dashboard**    | Track ticket status (`submitted → in‑progress → resolved/closed`)                                          |
-| **Agency Workspace**     | Lightweight admin UI to visualize, comment, and update complaints status resolved.                         |
-| **Realtime Updates**     | Displays status changes instantly via server actions & React Server Components.                            |
+Public‐service complaints are scattered across phone calls, emails, and social media. Agencies struggle to triage them, and citizens rarely know what happened after they complained. **OpenServe** unifies that flow with a single portal that is:
 
-> Designed for extensibility – upcoming milestones include AI‑assisted routing, public analytics, and SMS/USSD channels.
+- **Simple** – one form, smart suggestions.
+- **Transparent** – real‑time status updates & dashboards.
+- **Extensible** – modular architecture ready for AI‑routing & analytics.
 
 ---
 
-## 🛠 Tech Stack
+## ✨ Key Features (MVP)
 
-| Layer            | Tools                                                                          |
-| ---------------- | ------------------------------------------------------------------------------ |
-| **Framework**    | [Next.js 14](https://nextjs.org/) – App Router + Server Actions + RSC          |
-| **Styling / UI** | [Tailwind CSS](https://tailwindcss.com/) + [shadcn/ui](https://ui.shadcn.com/) |
-| **Database**     | MongoDB Atlas + Mongoose ODM                                                   |
-| **Auth**         | [Authjs.dev](https://authjs.dev/) – Google & Github OAuth (JWT strategy)       |
-| **Deployment**   | Vercel (CI/CD & Edge Functions)                                                |
+| #   | Capability           | Citizen View                                                                               | Agency/Admin View                                      |
+| --- | -------------------- | ------------------------------------------------------------------------------------------ | ------------------------------------------------------ |
+| 1   | **Submit complaint** | Web form with category + agency autocomplete                                               | —                                                      |
+| 2   | **Smart routing**    | —                                                                                          | Ticket lands in the correct agency inbox automatically |
+| 3   | **Status tracking**  | Dashboard cards (`submitted → progress → resolved/closed`) + e‑mail / in‑app notifications | Update status, add internal / public notes             |
+| 4   | **Auth**             | Google OAuth                                                                               | Google OAuth (agency accounts)                         |
+| 5   | **Basic analytics**  | —                                                                                          | Ticket counts, SLA charts (VisX)                       |
 
-##  Local Development
+_Milestone extras planned_: AI classification, SMS/USSD channel, multi‑language, public analytics.
 
-1. **Clone & install**
+---
 
-   ```bash
-   git clone https://github.com/your‑org/open‑serve.git
-   cd open‑serve
-   npm install
+## 🏗 Tech Stack
 
-   ```
+| Layer            | Tooling                                                  |
+| ---------------- | -------------------------------------------------------- |
+| **Framework**    | Next.js 14 (App Router, Server Actions, RSC, TypeScript) |
+| **Styling / UI** | Tailwind CSS + shadcn/ui (Dark‑mode first)               |
+| **Database**     | MongoDB Atlas + Mongoose ODM                             |
+| **Auth**         | NextAuth.js (Google & Github Provider)                   |
+| **Deployment**   | Vercel (CI/CD, Edge)                                     |
 
-# Environment variables
+---
 
-    Create a .env.local file:
+## 🚀 Getting Started Locally
 
-    ```bash
-    # AuthJs.dev
+```bash
+# 1. Clone & install
+$ git clone https://github.com/Yves-Developer/open-serve.git
+$ cd open-serve && npm install
 
-    AUTH_SECRET= # Added by `npx auth`. Read more: https://cli.authjs.dev
-    #GITHUB
-    AUTH_GITHUB_ID=XXXXXXXXXXXXXXXXXXXX
-    AUTH_GITHUB_SECRET=XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-    #GOOGLE
-    AUTH_GOOGLE_ID=XXXXXXXXXXXXXXXXXXXXX.apps.googleusercontent.com
-    AUTH_GOOGLE_SECRET=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-    #MONGODB
-    MONGODB_URI=
-    NODE_ENV=development
-    NEXTAUTH_URL=http://localhost:3000
+# 2. Configure environment
+$ cp .env.example .env.local
+# edit MongoDB + Authjs.dev + Google & Github creds
 
-````
-
-# Run dev server
-
-    ``bash
-    npm run dev
-    ```
-
+# 3. Run dev server
+$ npm run dev
 # ➜ http://localhost:3000
-````
+```
+
+### Environment variables (`.env.local`)
+
+```env
+# MongoDB
+MONGODB_URI=mongodb+srv://<user>:<pass>@cluster.mongodb.net/openserve
+
+# NextAuth
+AUTH_SECRET=XXXXXXXXX # Added by `npx auth`. Read more: https://cli.authjs.dev
+
+AUTH_GOOGLE_ID=xxxxxxxxxxxx.apps.googleusercontent.com
+AUTH_GOOGLE_SECRET=xxxxxxxxxxxxxxxxxxxx
+AUTH_GITHUB_ID=xxxxxxxxxxxx.apps.googleusercontent.com
+AUTH_GITHUB_SECRET=xxxxxxxxxxxxxxxxxxxx
+NEXTAUTH_URL=http://localhost:3000
+```
+
+---
+
+## 🛣 Vision
+
+- [ ] AI‑powered category & agency prediction
+- [ ] SMS / USSD submission flow
+- [ ] SLA breach alerts
+- [ ] Public analytics portal
+- [ ] i18n (🇫🇷 🇰🇪 🇷🇼 …)
+
+---
+
+## 🤝 Contributing
+
+1. **Fork & branch** – `git checkout -b feat/my‑feature`
+2. **Code style** – run `npm run lint && npm run format`.
+
+---
